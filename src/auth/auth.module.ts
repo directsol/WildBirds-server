@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from "./local.strategy";
+import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from "../users/users.module";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
-
-console.log(process.env['JWT_SECRET'])
 
 @Module({
     imports: [
@@ -13,14 +12,16 @@ console.log(process.env['JWT_SECRET'])
         UsersModule,
         JwtModule.register({
             secret: 'secret',
-            signOptions: { expiresIn: process.env['JWT_TTL'] },
+            signOptions: { expiresIn: '60s' },
+            // fixme
+            //signOptions: { expiresIn: process.env['JWT_TTL'] },
             //secret: process.env['JWT_SECRET'],
-            //signOptions: { expiresIn: '60s' },
         }),
     ],
     providers: [
         AuthService,
         LocalStrategy,
+        JwtStrategy,
     ],
     exports: [
         AuthService,
